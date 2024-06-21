@@ -4,8 +4,8 @@ pipeline {
     stages {
     stage('checkout') {
       steps {
+        git branch: 'main', url: 'https://github.com/manugadari/Ekart'
         sh 'git branch'
-        sh 'git branch feature-1'
       }
     }
     stage('SAST Scan for whole project') {
