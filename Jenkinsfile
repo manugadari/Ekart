@@ -1,7 +1,7 @@
 pipeline { 
   agent any
 
-    stages {
+    stages {    
     stage('checkout') {
       steps {
         git branch: 'main', url: 'https://github.com/manugadari/Ekart'
