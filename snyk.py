@@ -287,6 +287,9 @@ def main():
     scan_summary_file_path = './outputs/severity_summary.json'
     scan_json_file_path = "./outputs/scan_results.json"
     scan_html_file_path = "./outputs/scan_results.html"
+    sca_scan_summary_file_path = './outputs/sca_severity_summary.json'
+    sca_scan_json_file_path = "./outputs/sca_scan_results.json"
+    sca_scan_html_file_path = "./outputs/sca_scan_results.html"
     
     parser = argparse.ArgumentParser(description="Snyk SAST Scanner")
     parser.add_argument('--scan-for-push', action='store_true', help="Trigger SAST scan using Snyk CLI")
@@ -327,12 +330,14 @@ def main():
         if not args.report:
             start_time = time.time()
             scan_results = scanner.trigger_sast_scan(target)
+            sca_scan_results = scanner.trigger_sca_scan(target)
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
         else:
             start_time = time.time()
             scan_results= scanner.trigger_sast_scan(project_name=project_path) #, target_name=target_name)   
+            sca_scan_results = scanner.trigger_sca_scan(target)
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
@@ -342,6 +347,14 @@ def main():
             scanner.save_results_to_json(scan_results, scan_json_file_path)
             scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
             scanner.save_results_to_json(scan_summary, scan_summary_file_path)
+            if not scanner.evaluate_severity_summary(severity_summary):
+                sys.exit(1)  # Fail pipeline
+        if sca_scan_results:
+            severity_summary = scanner.summarize_severities(sca_scan_results)
+            scan_summary = {"execution_time": execution_time, "summary": severity_summary}
+            scanner.save_results_to_json(sca_scan_results, scan_json_file_path)
+            scanner.convert_json_to_html(sca_scan_json_file_path, sca_scan_html_file_path)
+            scanner.save_results_to_json(scan_summary, sca_scan_summary_file_path)
             if not scanner.evaluate_severity_summary(severity_summary):
                 sys.exit(1)  # Fail pipeline
 
@@ -355,6 +368,7 @@ def main():
         if changed_files:
             start_time = time.time()
             scan_results = scanner.trigger_sast_scan(changed_files)
+            sca_scan_results = scanner.trigger_sca_scan(target)
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
@@ -369,14 +383,20 @@ def main():
                 sys.exit(1)  # Fail pipeline
             else:
                 logger.info("No changed files found to scan")
+        if sca_scan_results:
+            severity_summary = scanner.summarize_severities(sca_scan_results)
+            scan_summary = {"execution_time": execution_time, "summary": severity_summary}
+            scanner.save_results_to_json(sca_scan_results, scan_json_file_path)
+            scanner.convert_json_to_html(sca_scan_json_file_path, sca_scan_html_file_path)
+            scanner.save_results_to_json(scan_summary, sca_scan_summary_file_path)
+            if not scanner.evaluate_severity_summary(severity_summary):
+                sys.exit(1)  # Fail pipeline
 
-    # try:
-    #     logger.info("sca scan started")
-    #     target="/var/lib/jenkins/workspace/Ekart"
-    #     scan_results = scanner.trigger_sca_scan(target)
-    # except ValueError as e:
-    #     logger.error(f"Authentication failed: {e}")
-    #     return
+    try:
+        scan_results = scanner.trigger_sca_scan(target)
+    except ValueError as e:
+        logger.error(f"Authentication failed: {e}")
+        return
     logger.info("----------------Main Ended-----------------")   
 if __name__ == "__main__":
     main()
