@@ -350,7 +350,7 @@ def main():
 
     try:
         logger.info("sca scan started")
-        target="/var/lib/jenkins/workspace/Ecart"
+        target="/var/lib/jenkins/workspace/Ekart"
         scan_results = scanner.trigger_sca_scan(target)
     except ValueError as e:
         logger.error(f"Authentication failed: {e}")
