@@ -236,8 +236,8 @@ class SnykScanner:
             result = subprocess.run(['snyk-to-html', '-i', json_file, '-a'], capture_output=True, text=True)
             if result.returncode == 0:
                 print("Command executed successfully.")
-                print("Output HTML content:")
-                print(result.stdout)  # Print the captured standard output (HTML content)
+                # print("Output HTML content:")
+                # print(result.stdout)  # Print the captured standard output (HTML content)
             else:
                 print("Command failed with return code:", result.returncode)
                 print("Error output:")
@@ -371,12 +371,6 @@ def main():
             else:
                 logger.info("No changed files found to scan")
 
-
-    # try:
-    #     scan_results = scanner.trigger_sca_scan(target)
-    # except ValueError as e:
-    #     logger.error(f"Authentication failed: {e}")
-    #     return
     logger.info("----------------Main Ended-----------------")   
 if __name__ == "__main__":
     main()

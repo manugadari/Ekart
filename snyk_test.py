@@ -323,11 +323,6 @@ def main():
             else:
                 logger.info("No changed files found to scan")
 
-    # try:
-    #     scan_results = scanner.trigger_sca_scan(target)
-    # except ValueError as e:
-    #     logger.error(f"Authentication failed: {e}")
-    #     return
     logger.info("----------------Main Ended-----------------")   
 if __name__ == "__main__":
     main()
