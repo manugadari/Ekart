@@ -235,9 +235,9 @@ class SnykScanner:
             logger.info(f"HTML File PATH: {html_file}")
             result = subprocess.run(['snyk-to-html', '-i', json_file, '-a'], capture_output=True, text=True)
             if result.returncode == 0:
-                print("Command executed successfully.")
+                print("Command estdoutxecuted successfully.")
                 # print("Output HTML content:")
-                # print(result.stdout)  # Print the captured standard output (HTML content)
+                # print(result.)  # Print the captured standard output (HTML content)
             else:
                 print("Command failed with return code:", result.returncode)
                 print("Error output:")
