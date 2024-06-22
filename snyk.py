@@ -154,8 +154,6 @@ class SnykScanner:
             
             logger.info("----------------get_changed_files Started-----------------")
             repo = Repo(repo_path)
-            # base_commit = repo.commit(base_branch)
-            # pr_commit = repo.commit(pr_branch)
             # Fetch the latest changes from the remote repository
             origin = repo.remotes.origin
             origin.fetch()
@@ -166,8 +164,6 @@ class SnykScanner:
             
             # Perform the diff between the branches
             diff_index = base_commit.diff(compare_commit)
-            for item in diff_index:
-                print("File: ",item)
             changed_files = [item.a_path for item in diff_index]
             logger.info(f"Found {len(changed_files)} changed files between {base_branch} and {pr_branch}.")
             logger.info(f"Changed Files: {changed_files}")
