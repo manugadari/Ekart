@@ -34,15 +34,17 @@ class SnykScanner:
         """
         Check auth token from environment variable.
         """
-        logger.info("check snyk")
-        if 'SNYK_TOKEN' in os.environ:
-            logger.error("SNYK_TOKEN environment variable not set.")
-            raise ValueError("SNYK_TOKEN environment variable not set.")
         try:
-             subprocess.run(['snyk', 'auth', token], check=True)
-             logger.info("Authenticated to Snyk successfully.")
+            logger.info("----------------check_snyk_token Started-----------------")
+            if 'SNYK_TOKEN' in os.environ:
+                logger.error("SNYK_TOKEN environment variable not set.")
+                raise ValueError("SNYK_TOKEN environment variable not set.")
+            subprocess.run(['snyk', 'auth', token], check=True)
+            logger.info("Authenticated to Snyk successfully.")
+            logger.info("----------------check_snyk_token Ended-----------------")
         except subprocess.CalledProcessError as e:
              logger.error(f"Failed to authenticate to Snyk: {e}")
+             logger.info("----------------check_snyk_token Ended-----------------")
              raise
 
     def trigger_sast_scan(self, target, project_name=None, target_name=None):
@@ -290,12 +292,12 @@ def main():
         logger.error(f"Snyk CLI check failed: {e}")
         return
     
-    # Authenticate to Snyk
-    # try:
-    #     SnykScanner.check_snyk_token(token)
-    # except ValueError as e:
-    #     logger.error(f"Authentication failed: {e}")
-    #     return
+    #Authenticate to Snyk
+    try:
+        SnykScanner.check_snyk_token(token)
+    except ValueError as e:
+        logger.error(f"Authentication failed: {e}")
+        return
 
     # scanner = SnykScanner()
     # execution_time = 0
