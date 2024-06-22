@@ -18,7 +18,7 @@ pipeline {
     stage('SCA scan for files') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                  sh 'python3 snyk_test.py --repo-path "./" --base-branch "main" --pr-branch "feature-1" --scan-for-pr'  
+                  sh "python3 snyk_test.py --scan-for-push --scan-for-pr --repo-path "./" --base-branch "main" --pr-branch "feature-1" "  
                 }
             }
       }
