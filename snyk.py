@@ -342,7 +342,7 @@ def main():
             severity_summary = scanner.summarize_severities(scan_results)
             scan_summary = {"execution_time": execution_time, "summary": severity_summary}
             scanner.save_results_to_json(scan_results, scan_json_file_path)
-            scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
+            #scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
             scanner.save_results_to_json(scan_summary, scan_summary_file_path)
             if not scanner.evaluate_severity_summary(severity_summary):
                 sys.exit(1)  # Fail pipeline
@@ -364,7 +364,7 @@ def main():
             severity_summary = scanner.summarize_severities(scan_results)
             scan_summary = {"execution_time": execution_time, "summary": severity_summary}
             scanner.save_results_to_json(scan_results, scan_json_file_path)
-            scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
+            #scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
             scanner.save_results_to_json(scan_summary, scan_summary_file_path)
             if not scanner.evaluate_severity_summary(severity_summary):
                 sys.exit(1)  # Fail pipeline
