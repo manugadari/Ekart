@@ -8,7 +8,7 @@ pipeline {
         sh 'git branch'
       }
     }
-    stage('SAST Scan for whole project') {
+    stage('SCA Scan for whole project') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh "python3 snyk.py --scan-for-push"
