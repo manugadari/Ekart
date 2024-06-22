@@ -352,6 +352,7 @@ def main():
             if not scanner.evaluate_severity_summary(severity_summary):
                 sys.exit(1)  # Fail pipeline
         if sca_scan_results:
+            logger.info("inside sca_scan_results push")
             severity_summary = scanner.summarize_severities(sca_scan_results)
             scan_summary = {"execution_time": execution_time, "summary": severity_summary}
             scanner.save_results_to_json(sca_scan_results, sca_scan_json_file_path)
@@ -375,7 +376,6 @@ def main():
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
         if scan_results:
-            logger.info("scanresult check")
             severity_summary = scanner.summarize_severities(scan_results)
             scan_summary = {"execution_time": execution_time, "summary": severity_summary}
             scanner.save_results_to_json(scan_results, scan_json_file_path)
@@ -386,6 +386,7 @@ def main():
             else:
                 logger.info("No changed files found to scan")
         if sca_scan_results:
+            logger.info("inside sca_scan_results pr")
             severity_summary = scanner.summarize_severities(sca_scan_results)
             scan_summary = {"execution_time": execution_time, "summary": severity_summary}
             scanner.save_results_to_json(sca_scan_results, sca_scan_json_file_path)
