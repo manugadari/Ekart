@@ -297,30 +297,30 @@ def main():
         return
 
     scanner = SnykScanner()
-    execution_time = 0
-    if args.scan_for_push:
-        if not args.report:
-            start_time = time.time()
-            target="/var/lib/jenkins/workspace/snyk shell"
-            logger.info(f"type: {isinstance(target,str)}")
-            scan_results = scanner.trigger_sast_scan(target)
-            end_time = time.time()
-            execution_time = end_time - start_time
-            logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
-        else:
-            start_time = time.time()
-            scan_results= scanner.trigger_sast_scan(project_path=project_path) #, target_name=target_name)   
-            end_time = time.time()
-            execution_time = end_time - start_time
-            logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
-        if scan_results:
-            severity_summary = scanner.summarize_severities(scan_results)
-            scan_summary = {"execution_time": execution_time, "summary": severity_summary}
-            scanner.save_results_to_json(scan_results, scan_json_file_path)
-            scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
-            scanner.save_results_to_json(scan_summary, scan_summary_file_path)
-            if not scanner.evaluate_severity_summary(severity_summary):
-                sys.exit(1)  # Fail pipeline
+    # execution_time = 0
+    # if args.scan_for_push:
+    #     if not args.report:
+    #         start_time = time.time()
+    #         target="/var/lib/jenkins/workspace/snyk shell"
+    #         logger.info(f"type: {isinstance(target,str)}")
+    #         scan_results = scanner.trigger_sast_scan(target)
+    #         end_time = time.time()
+    #         execution_time = end_time - start_time
+    #         logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
+    #     else:
+    #         start_time = time.time()
+    #         scan_results= scanner.trigger_sast_scan(project_path=project_path) #, target_name=target_name)   
+    #         end_time = time.time()
+    #         execution_time = end_time - start_time
+    #         logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
+    #     if scan_results:
+    #         severity_summary = scanner.summarize_severities(scan_results)
+    #         scan_summary = {"execution_time": execution_time, "summary": severity_summary}
+    #         scanner.save_results_to_json(scan_results, scan_json_file_path)
+    #         scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
+    #         scanner.save_results_to_json(scan_summary, scan_summary_file_path)
+    #         if not scanner.evaluate_severity_summary(severity_summary):
+    #             sys.exit(1)  # Fail pipeline
 
     # if args.scan_for_pr:
     #     logger.info("checking changed files")
