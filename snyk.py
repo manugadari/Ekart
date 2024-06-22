@@ -55,9 +55,8 @@ class SnykScanner:
         :return: Scan results in JSON format.
         """
         try:
-            #logger.info(f"type: {type(target)}")
+            logger.info("----------------trigger_sast_scan Started-----------------")
             if isinstance(target, str):
-                logger.info("check")
                 # Scan the entire project
                 command = ['snyk', 'code', 'test','--json', target]
             elif isinstance(target, list):
@@ -73,7 +72,7 @@ class SnykScanner:
             logger.info(f"Running Command - {command}")
 
             result = subprocess.run(command, capture_output=True, text=True)
-            logger.info(f" result:{result}")
+            #logger.info(f" result:{result}")
 
             if result.returncode == 0:
                 logger.info("CLI scan completed successfully. No vulnerabilities found.")
@@ -86,12 +85,14 @@ class SnykScanner:
             else:
                 logger.error(f"CLI scan failed with unexpected error code: {result.returncode}")
             scan_results = json.loads(result.stdout)
+            logger.info("----------------trigger_sast_scan Ended-----------------")
             return scan_results
         except subprocess.CalledProcessError as e:
             logger.error(f"Error running Snyk CLI: {e}")
             raise
         except json.JSONDecodeError as e:
             logger.error(f"Error parsing JSON output: {e}")
+            logger.info("----------------trigger_sast_scan Ended-----------------")
             raise
 
     def trigger_sca_scan(self, target, project_name=None, target_name=None):
@@ -174,6 +175,7 @@ class SnykScanner:
         """
         severity_counts = {'low': 0, 'medium': 0, 'high': 0}
         try:
+            logger.info("----------------summarize_severities Started-----------------")
             for run in scan_results.get('runs', []):
                 for result in run.get('results', []):
                     level = result.get("level", "")
@@ -185,10 +187,12 @@ class SnykScanner:
                         severity_counts["high"] += 1
             logger.info(f"Severity summary: {severity_counts}")
             severity_counts['scan_time'] = scan_results.get('scan_time', 0)  # Include scan time in summary
+            logger.info("----------------summarize_severities Ended-----------------")
             return severity_counts
         except Exception as e:
             logger.error(f"Error summarizing severities: {e}")
-            return severity_counts
+            logger.info("----------------summarize_severities Ended-----------------")
+            raise
 
     @staticmethod
     def save_results_to_json(results, file_path):
@@ -198,11 +202,15 @@ class SnykScanner:
         :param file_path: Path to save the JSON file.
         """
         try:
+            logger.info("----------------save_results_to_json Started-----------------")
             with open(file_path, 'w') as f:
                 json.dump(results, f, indent=4)
             logger.info(f"Scan results saved to {file_path}.")
+            logger.info("----------------save_results_to_json Ended-----------------")
         except Exception as e:
             logger.error(f"Error saving scan results to {file_path}: {e}")
+            logger.info("----------------save_results_to_json Ended-----------------")
+            raise
 
     @staticmethod
     def convert_json_to_html(json_file, html_file):
@@ -212,8 +220,9 @@ class SnykScanner:
         :param html_file: Path to save the HTML file.
         """
         try:
-            logger.info(f"json_file: {json_file}")
-            logger.info(f" html_file: {html_file}")
+            logger.info("----------------convert_json_to_html Started-----------------")
+            logger.info(f"JSON File PATH: {json_file}")
+            logger.info(f"HTML File PATH: {html_file}")
             result = subprocess.run(['snyk-to-html', '-i', json_file, '-a'], capture_output=True, text=True)
             if result.returncode == 0:
                 print("Command executed successfully.")
@@ -225,8 +234,10 @@ class SnykScanner:
                 print(result.stderr) 
             result.check_returncode()
             logger.info(f"Converted JSON results to HTML file at {html_file}")
+            logger.info("----------------convert_json_to_html Ended-----------------")
         except subprocess.CalledProcessError as e:
             logger.error(f"Error converting JSON to HTML: {e}")
+            logger.info("----------------convert_json_to_html Ended-----------------")
             raise
     
     @staticmethod
@@ -236,12 +247,14 @@ class SnykScanner:
         :param severity_summary: Severity summary dictionary.
         :return: Boolean indicating whether pipeline should pass or fail.
         """
-        logger.info("evaluate_severity Check")
+        logger.info("----------------evaluate_severity_summary Started-----------------")
         if severity_summary.get('high', 0) > 0:
             logger.error("High severity issues found. Pipeline will fail.")
+            logger.info("----------------evaluate_severity_summary Ended-----------------")
             return False
         else:
             logger.info("No high severity issues found. Pipeline will pass.")
+            logger.info("----------------evaluate_severity_summary Ended-----------------")
             return True
 
 def load_config(config_file):
@@ -284,6 +297,7 @@ def main():
     org_id = config.get('org_id')
     project_id = config.get('project_id')
     token = config.get('auth_token')
+    target=config.get('target')
 
     # Check if Snyk CLI is installed
     try:
@@ -299,31 +313,29 @@ def main():
         logger.error(f"Authentication failed: {e}")
         return
 
-    # scanner = SnykScanner()
-    # execution_time = 0
-    # if args.scan_for_push:
-    #     if not args.report:
-    #         start_time = time.time()
-    #         target="/var/lib/jenkins/workspace/snyk shell"
-    #         logger.info(f"type: {isinstance(target,str)}")
-    #         scan_results = scanner.trigger_sast_scan(target)
-    #         end_time = time.time()
-    #         execution_time = end_time - start_time
-    #         logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
-    #     else:
-    #         start_time = time.time()
-    #         scan_results= scanner.trigger_sast_scan(project_path=project_path) #, target_name=target_name)   
-    #         end_time = time.time()
-    #         execution_time = end_time - start_time
-    #         logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
-    #     if scan_results:
-    #         severity_summary = scanner.summarize_severities(scan_results)
-    #         scan_summary = {"execution_time": execution_time, "summary": severity_summary}
-    #         scanner.save_results_to_json(scan_results, scan_json_file_path)
-    #         scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
-    #         scanner.save_results_to_json(scan_summary, scan_summary_file_path)
-    #         if not scanner.evaluate_severity_summary(severity_summary):
-    #             sys.exit(1)  # Fail pipeline
+    scanner = SnykScanner()
+    execution_time = 0
+    if args.scan_for_push:
+        if not args.report:
+            start_time = time.time()
+            scan_results = scanner.trigger_sast_scan(target)
+            end_time = time.time()
+            execution_time = end_time - start_time
+            logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
+        else:
+            start_time = time.time()
+            scan_results= scanner.trigger_sast_scan(project_name=project_path) #, target_name=target_name)   
+            end_time = time.time()
+            execution_time = end_time - start_time
+            logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
+        if scan_results:
+            severity_summary = scanner.summarize_severities(scan_results)
+            scan_summary = {"execution_time": execution_time, "summary": severity_summary}
+            scanner.save_results_to_json(scan_results, scan_json_file_path)
+            scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
+            scanner.save_results_to_json(scan_summary, scan_summary_file_path)
+            if not scanner.evaluate_severity_summary(severity_summary):
+                sys.exit(1)  # Fail pipeline
 
     # if args.scan_for_pr:
     #     logger.info("checking changed files")
