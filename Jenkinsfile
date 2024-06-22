@@ -11,11 +11,18 @@ pipeline {
     stage('SAST Scan for whole project') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                    sh 'python3 snyk.py --scan-for-push --scan-for-pr --repo-path "./" --base-branch "main" --pr-branch "feature-1"'
+                    sh 'python3 snyk.py --scan-for-push'
                 }
             }
     }
-    stage('SCA scan for changed files') {
+    stage('scan for changed files') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                  sh 'python3 snyk_changed.py --scan-for-pr --repo-path "./" --base-branch "main" --pr-branch "feature-1"'
+                }
+            }
+      }
+    stage('Synk Code Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                   sh 'python3 snyk_test.py --scan-for-push --scan-for-pr --repo-path "./" --base-branch "main" --pr-branch "feature-1"'
