@@ -340,6 +340,7 @@ def main():
             start_time = time.time()
             scan_results= scanner.trigger_sast_scan(project_name=project_path) #, target_name=target_name)   
             sca_scan_results = scanner.trigger_sca_scan(target)
+            logger.info(f"sca scan result: {sca_scan_results}") 
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
