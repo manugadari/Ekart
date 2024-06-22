@@ -19,11 +19,14 @@ class SnykScanner:
         Check if Snyk CLI is installed.
         """
         try:
+            logger.info("----------------check_snyk_installed started-----------------")
             result = subprocess.run(['snyk', '--version'], capture_output=True, text=True)
             result.check_returncode()
             logger.info(f"Snyk CLI is installed: {result.stdout.strip()}")
+            logger.info("----------------check_snyk_installed Ended-----------------")
         except subprocess.CalledProcessError:
             logger.error("Snyk CLI is not installed. Please install it from https://snyk.io/docs/snyk-cli-installation/")
+            logger.info("----------------check_snyk_installed Ended-----------------")
             raise
 
     @staticmethod
@@ -255,7 +258,7 @@ def load_config(config_file):
         raise
 
 def main():
-    logger.info("Logging started")  
+    logger.info("----------------Main started-----------------")  
     if not os.path.exists("outputs"):
         os.mkdir("outputs")
     scan_summary_file_path = './outputs/severity_summary.json'
@@ -272,16 +275,14 @@ def main():
     parser.add_argument('--repo-path', default="./", help="Path to the Git repository")
 
     args = parser.parse_args()
-    logger.info(f"args: {args}")
+    logger.info(f"Arguments: {args}")
     config = load_config("config.json") # file path
 
     project_path = config.get('project_path')
     org_id = config.get('org_id')
     project_id = config.get('project_id')
     token = config.get('auth_token')
-    #project_path="/org/devsecops-8asL59pQsbCWMkzKan4nwA"
-    #org_id="24f6a625-a8fe-42dc-b991-48ad1ce96064"
-    #project_id=""
+
     # Check if Snyk CLI is installed
     try:
         SnykScanner.check_snyk_installed()
@@ -290,13 +291,13 @@ def main():
         return
     
     # Authenticate to Snyk
-    try:
-        SnykScanner.check_snyk_token(token)
-    except ValueError as e:
-        logger.error(f"Authentication failed: {e}")
-        return
+    # try:
+    #     SnykScanner.check_snyk_token(token)
+    # except ValueError as e:
+    #     logger.error(f"Authentication failed: {e}")
+    #     return
 
-    scanner = SnykScanner()
+    # scanner = SnykScanner()
     # execution_time = 0
     # if args.scan_for_push:
     #     if not args.report:
@@ -348,13 +349,13 @@ def main():
     #         else:
     #             logger.info("No changed files found to scan")
 
-    try:
-        logger.info("sca scan started")
-        target="/var/lib/jenkins/workspace/Ekart"
-        scan_results = scanner.trigger_sca_scan(target)
-    except ValueError as e:
-        logger.error(f"Authentication failed: {e}")
-        return
-        
+    # try:
+    #     logger.info("sca scan started")
+    #     target="/var/lib/jenkins/workspace/Ekart"
+    #     scan_results = scanner.trigger_sca_scan(target)
+    # except ValueError as e:
+    #     logger.error(f"Authentication failed: {e}")
+    #     return
+    logger.info("----------------Main Ended-----------------")   
 if __name__ == "__main__":
     main()
