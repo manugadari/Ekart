@@ -354,7 +354,7 @@ def main():
         if sca_scan_results:
             severity_summary = scanner.summarize_severities(sca_scan_results)
             scan_summary = {"execution_time": execution_time, "summary": severity_summary}
-            scanner.save_results_to_json(sca_scan_results, scan_json_file_path)
+            scanner.save_results_to_json(sca_scan_results, sca_scan_json_file_path)
             scanner.convert_json_to_html(sca_scan_json_file_path, sca_scan_html_file_path)
             scanner.save_results_to_json(scan_summary, sca_scan_summary_file_path)
             if not scanner.evaluate_severity_summary(severity_summary):
@@ -388,7 +388,7 @@ def main():
         if sca_scan_results:
             severity_summary = scanner.summarize_severities(sca_scan_results)
             scan_summary = {"execution_time": execution_time, "summary": severity_summary}
-            scanner.save_results_to_json(sca_scan_results, scan_json_file_path)
+            scanner.save_results_to_json(sca_scan_results, sca_scan_json_file_path)
             scanner.convert_json_to_html(sca_scan_json_file_path, sca_scan_html_file_path)
             scanner.save_results_to_json(scan_summary, sca_scan_summary_file_path)
             if not scanner.evaluate_severity_summary(severity_summary):
