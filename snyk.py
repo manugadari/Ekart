@@ -103,9 +103,8 @@ class SnykScanner:
         :return: Scan results in JSON format.
         """
         try:
-            #logger.info(f"type: {type(target)}")
+            logger.info("----------------trigger_sca_scan Started-----------------")
             if isinstance(target, str):
-                logger.info("check")
                 # Scan the entire project
                 command = ['snyk', 'test','--json', target]
             elif isinstance(target, list):
@@ -121,7 +120,7 @@ class SnykScanner:
             logger.info(f"Running Command - {command}")
 
             result = subprocess.run(command, capture_output=True, text=True)
-            logger.info(f" result:{result}")
+            #logger.info(f" result:{result}")
 
             if result.returncode == 0:
                 logger.info("CLI scan completed successfully. No vulnerabilities found.")
@@ -134,12 +133,15 @@ class SnykScanner:
             else:
                 logger.error(f"CLI scan failed with unexpected error code: {result.returncode}")
             scan_results = json.loads(result.stdout)
+            logger.info("----------------trigger_sca_scan Ended-----------------")
             return scan_results
         except subprocess.CalledProcessError as e:
             logger.error(f"Error running Snyk CLI: {e}")
+            logger.info("----------------trigger_sca_scan Ended-----------------")
             raise
         except json.JSONDecodeError as e:
             logger.error(f"Error parsing JSON output: {e}")
+            logger.info("----------------trigger_sca_scan Ended-----------------")
             raise
 
     def get_changed_files(self, repo_path, base_branch, pr_branch):
@@ -392,11 +394,11 @@ def main():
             if not scanner.evaluate_severity_summary(severity_summary):
                 sys.exit(1)  # Fail pipeline
 
-    try:
-        scan_results = scanner.trigger_sca_scan(target)
-    except ValueError as e:
-        logger.error(f"Authentication failed: {e}")
-        return
+    # try:
+    #     scan_results = scanner.trigger_sca_scan(target)
+    # except ValueError as e:
+    #     logger.error(f"Authentication failed: {e}")
+    #     return
     logger.info("----------------Main Ended-----------------")   
 if __name__ == "__main__":
     main()
