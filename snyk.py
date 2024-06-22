@@ -1,4 +1,4 @@
-dimport os
+import os
 import subprocess
 import json
 import argparse
