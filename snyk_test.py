@@ -141,6 +141,7 @@ class SnykScanner:
             for run in scan_results.get('runs', []):
                 for result in run.get('results', []):
                     level = result.get("level", "")
+                    logger.info(f"level:{level}")
                     if level in ['note', 'info'] :
                         severity_counts["low"] += 1
                     elif level == 'warning':
