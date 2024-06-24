@@ -326,11 +326,12 @@ def main():
     scanner = SnykScanner()
     execution_time = 0
     if args.scan_for_push:
-    try:
-        SnykScanner.trigger_monitor(target)
-    except ValueError as e:
-        logger.error(f"Authentication failed: {e}")
-        return
+        try:
+            scanner.trigger_monitor(target)
+        except ValueError as e:
+            logger.error(f"Authentication failed: {e}")
+            return
+
 
     logger.info("----------------Main Ended-----------------")   
 if __name__ == "__main__":
