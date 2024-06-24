@@ -139,6 +139,7 @@ class SnykScanner:
         try:
             logger.info("----------------summarize_severities Started-----------------")
             for run in scan_results.get('vulnerabilities', []):
+                logger.info(f"run:{run}")
                 for result in run.get('references', []):
                     # level = result.get("level", "")
                       logger.info(f"result:{result}")
