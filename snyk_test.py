@@ -139,12 +139,7 @@ class SnykScanner:
         try:
             logger.info("----------------summarize_severities Started-----------------")
             for run in scan_results.get('vulnerabilities', []):
-                logger.info(f"run:{run}")
                 s=run.get('severity')
-                logger.info(f"s:{s}")
-                # for result in run.get('references', []):
-                    # level = result.get("level", "")
-                      # logger.info(f"result:{result}")
                 if s=='low' : 
                     severity_counts["low"] += 1
                 elif s == 'medium':
