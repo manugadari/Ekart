@@ -142,15 +142,15 @@ class SnykScanner:
                 logger.info(f"run:{run}")
                 s=run.get('severity')
                 logger.info(f"s:{s}")
-                for result in run.get('references', []):
+                # for result in run.get('references', []):
                     # level = result.get("level", "")
-                      logger.info(f"result:{result}")
-                    # if level in ['note', 'info'] :
-                    #     severity_counts["low"] += 1
-                    # elif level == 'warning':
-                    #     severity_counts["medium"] += 1
-                    # else:
-                    #     severity_counts["high"] += 1
+                      # logger.info(f"result:{result}")
+                if s=='low' : 
+                    severity_counts["low"] += 1
+                elif s == 'medium':
+                    severity_counts["medium"] += 1
+                else:
+                    severity_counts["high"] += 1
             logger.info(f"Severity summary: {severity_counts}")
             severity_counts['scan_time'] = scan_results.get('scan_time', 0)  # Include scan time in summary
             logger.info("----------------summarize_severities Ended-----------------")
