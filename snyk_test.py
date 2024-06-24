@@ -141,7 +141,7 @@ class SnykScanner:
             for run in scan_results.get('vulnerabilities', []):
                 for result in run.get('references', []):
                     # level = result.get("level", "")
-                    logger.info(f"result:{result}")
+                    ?logger.info(f"result:{result}")
                     # if level in ['note', 'info'] :
                     #     severity_counts["low"] += 1
                     # elif level == 'warning':
@@ -282,7 +282,7 @@ def main():
         if not args.report:
             start_time = time.time()
             scan_results = scanner.trigger_sca_scan(target)
-            logger.info(f" scanned result:{scan_results}")
+            # logger.info(f" scanned result:{scan_results}")
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
