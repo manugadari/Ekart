@@ -97,10 +97,8 @@ class SnykScanner:
 
     def trigger_monitor(self, target, project_name=None, target_name=None):
         """
-        Trigger SAST scan using Snyk CLI.
-        :param target: Path to the project or list of changed files to be scanned.
-        :param output_file: Path to save the JSON file output.
-        :return: Scan results in JSON format.
+        Trigger monitor scan using Snyk CLI.
+        
         """
         try:
             logger.info("----------------trigger_monitor Started-----------------")
