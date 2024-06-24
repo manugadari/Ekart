@@ -329,6 +329,7 @@ def main():
         if not args.report:
             start_time = time.time()
             scan_results = scanner.trigger_sast_scan(target)
+            logger.info(f" scanned result:{scan_results}")
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
