@@ -29,11 +29,11 @@ pipeline {
                 }
             }
       }
-    // stage('SCA scan') {
-    //     steps {
-    //       sh "python3 snyk.py " +
-    //           "--scan-for-pr"
-    //   }
-    // }
+    stage('Monitor scan') {
+        steps {
+          sh "python3 monitor.py " +
+              "--scan-for-push"
+      }
+    }
   }
 }
