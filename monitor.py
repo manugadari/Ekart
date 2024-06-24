@@ -103,7 +103,7 @@ class SnykScanner:
         :return: Scan results in JSON format.
         """
         try:
-            logger.info("----------------trigger_sca_scan Started-----------------")
+            logger.info("----------------trigger_monitor Started-----------------")
             if isinstance(target, str):
                 # Scan the entire project
                 command = ['snyk', 'monitor',target]
