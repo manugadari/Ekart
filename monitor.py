@@ -95,7 +95,7 @@ class SnykScanner:
             logger.info("----------------trigger_sast_scan Ended-----------------")
             raise
 
-    def trigger_sca_scan(self, target, project_name=None, target_name=None):
+    def trigger_monitor(self, target, project_name=None, target_name=None):
         """
         Trigger SAST scan using Snyk CLI.
         :param target: Path to the project or list of changed files to be scanned.
@@ -106,7 +106,7 @@ class SnykScanner:
             logger.info("----------------trigger_sca_scan Started-----------------")
             if isinstance(target, str):
                 # Scan the entire project
-                command = ['snyk', 'test','--json', target]
+                command = ['snyk', 'monitor',target]
             elif isinstance(target, list):
                 flag_changed_files = [f"--file={file}" for file in target]
                 command = ['snyk', 'test', '--json'] + flag_changed_files
@@ -328,7 +328,7 @@ def main():
     if args.scan_for_push:
         if not args.report:
             start_time = time.time()
-            scan_results = scanner.trigger_sast_scan(target)
+            scan_results = scanner.trigger_monitor(target)
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
