@@ -15,7 +15,7 @@ pipeline {
                 }
             }
     }
-    stage('scan for changed files') {
+    stage('SAST scan for changed files') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                   sh 'python3 snyk_changed.py --scan-for-pr --repo-path "./" --base-branch "main" --pr-branch "feature-1"'
