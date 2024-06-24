@@ -138,16 +138,17 @@ class SnykScanner:
         severity_counts = {'low': 0, 'medium': 0, 'high': 0}
         try:
             logger.info("----------------summarize_severities Started-----------------")
-            for run in scan_results.get('runs', []):
-                for result in run.get('results', []):
-                    level = result.get("level", "")
-                    if level in ['note', 'info'] :
-                        severity_counts["low"] += 1
-                    elif level == 'warning':
-                        severity_counts["medium"] += 1
-                    else:
-                        severity_counts["high"] += 1
-            # logger.info(f"Severity summary: {severity_counts}")
+            for run in scan_results.get('vulnerabilities', []):
+                for result in run.get('references', []):
+                    # level = result.get("level", "")
+                      logger.info(f"result:{result}")
+                    # if level in ['note', 'info'] :
+                    #     severity_counts["low"] += 1
+                    # elif level == 'warning':
+                    #     severity_counts["medium"] += 1
+                    # else:
+                    #     severity_counts["high"] += 1
+            logger.info(f"Severity summary: {severity_counts}")
             severity_counts['scan_time'] = scan_results.get('scan_time', 0)  # Include scan time in summary
             logger.info("----------------summarize_severities Ended-----------------")
             return severity_counts
@@ -281,6 +282,7 @@ def main():
         if not args.report:
             start_time = time.time()
             scan_results = scanner.trigger_sca_scan(target)
+            # logger.info(f" scanned result:{scan_results}")
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
@@ -309,6 +311,7 @@ def main():
         if changed_files:
             start_time = time.time()
             scan_results = scanner.trigger_sca_scan(changed_files)
+            logger.info(f" scanned result:{scan_results}")
             end_time = time.time()
             execution_time = end_time - start_time
             logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
