@@ -329,7 +329,7 @@ def main():
         try:
             scanner.trigger_monitor(target)
         except ValueError as e:
-            logger.error(f"Authentication failed: {e}")
+            logger.error(f"Snyk result push failed: {e}")
             return
 
 
