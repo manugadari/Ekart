@@ -141,7 +141,7 @@ class SnykScanner:
             for run in scan_results.get('vulnerabilities', []):
                 for result in run.get('references', []):
                     # level = result.get("level", "")
-                    ?logger.info(f"result:{result}")
+                    # logger.info(f"result:{result}")
                     # if level in ['note', 'info'] :
                     #     severity_counts["low"] += 1
                     # elif level == 'warning':
