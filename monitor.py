@@ -326,26 +326,11 @@ def main():
     scanner = SnykScanner()
     execution_time = 0
     if args.scan_for_push:
-        if not args.report:
-            start_time = time.time()
-            scan_results = scanner.trigger_monitor(target)
-            end_time = time.time()
-            execution_time = end_time - start_time
-            logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds")
-        else:
-            start_time = time.time()
-            scan_results= scanner.trigger_sast_scan(project_name=project_path) #, target_name=target_name)   
-            end_time = time.time()
-            execution_time = end_time - start_time
-            logger.info(f"Snyk scan execution time: {execution_time:.2f} seconds") 
-        if scan_results:
-            severity_summary = scanner.summarize_severities(scan_results)
-            scan_summary = {"execution_time": execution_time, "summary": severity_summary}
-            scanner.save_results_to_json(scan_results, scan_json_file_path)
-            #scanner.convert_json_to_html(scan_json_file_path, scan_html_file_path)
-            scanner.save_results_to_json(scan_summary, scan_summary_file_path)
-            if not scanner.evaluate_severity_summary(severity_summary):
-                sys.exit(1)  # Fail pipeline
+    try:
+        SnykScanner.trigger_monitor(target)
+    except ValueError as e:
+        logger.error(f"Authentication failed: {e}")
+        return
 
     logger.info("----------------Main Ended-----------------")   
 if __name__ == "__main__":
